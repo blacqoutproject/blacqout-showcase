@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Blacqout — Design Showcase</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #060608;
+      --surface: #0f0f12;
+      --border: #1c1c24;
+      --text: #e8e8f0;
+      --muted: #52526a;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', system-ui, sans-serif;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* ANIMATED BG */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 80% 50% at 20% 20%, #7c3aed18 0%, transparent 60%),
+        radial-gradient(ellipse 60% 40% at 80% 80%, #2563eb14 0%, transparent 60%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    header {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      padding: 5rem 2rem 3.5rem;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: #ffffff08;
+      border: 1px solid #ffffff12;
+      border-radius: 100px;
+      padding: 0.35rem 1rem;
+      font-size: 0.72rem;
+      color: var(--muted);
+      letter-spacing: 0.08em;
+      margin-bottom: 1.75rem;
+      backdrop-filter: blur(8px);
+    }
+
+    header h1 {
+      font-size: clamp(2.2rem, 5vw, 4rem);
+      font-weight: 800;
+      letter-spacing: -0.04em;
+      line-height: 1.1;
+      margin-bottom: 1rem;
+    }
+
+    header h1 span {
+      background: linear-gradient(135deg, #a78bfa, #60a5fa, #34d399);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    header p {
+      color: var(--muted);
+      font-size: 1rem;
+    }
+
+    /* GRID */
+    .grid {
+      position: relative;
+      z-index: 1;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.25rem;
+      max-width: 1100px;
+      margin: 0 auto 5rem;
+      padding: 0 2rem;
+      perspective: 1000px;
+    }
+
+    .card {
+      background: linear-gradient(145deg, #13131a, #0d0d14);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 2.25rem;
+      cursor: pointer;
+      transition: transform 0.15s ease, box-shadow 0.3s ease, border-color 0.3s;
+      transform-style: preserve-3d;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: 24px;
+      background: radial-gradient(circle at var(--mx, 50%) var(--my, 50%), #ffffff08 0%, transparent 60%);
+      opacity: 0;
+      transition: opacity 0.3s;
+      pointer-events: none;
+    }
+
+    .card:hover::before { opacity: 1; }
+
+    .card:hover {
+      border-color: #ffffff18;
+      box-shadow: 0 20px 60px #00000080, 0 0 0 1px #ffffff08;
+    }
+
+    .card-num {
+      font-size: 0.62rem;
+      letter-spacing: 0.15em;
+      color: var(--muted);
+      margin-bottom: 1.25rem;
+    }
+
+    .card-icon {
+      font-size: 2.25rem;
+      margin-bottom: 1rem;
+      display: block;
+      filter: drop-shadow(0 4px 12px #0008);
+    }
+
+    .card-name {
+      font-size: 1.15rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.4rem;
+    }
+
+    .card-desc {
+      font-size: 0.8rem;
+      color: var(--muted);
+      line-height: 1.6;
+      margin-bottom: 1.5rem;
+    }
+
+    .card-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.78rem;
+      color: #7c7ca0;
+      font-weight: 500;
+      transition: color 0.2s, gap 0.2s;
+    }
+
+    .card:hover .card-cta {
+      color: var(--text);
+      gap: 0.7rem;
+    }
+
+    /* OVERLAY */
+    .overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: #000000d0;
+      backdrop-filter: blur(20px);
+      z-index: 300;
+      overflow-y: auto;
+      padding: 2rem;
+      animation: fadeIn 0.2s ease;
+    }
+
+    .overlay.open { display: flex; align-items: flex-start; justify-content: center; }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .modal {
+      background: linear-gradient(145deg, #0f0f18, #0a0a12);
+      border: 1px solid var(--border);
+      border-radius: 28px;
+      width: 100%;
+      max-width: 1100px;
+      padding: 3rem;
+      position: relative;
+      margin: auto;
+      animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(40px) scale(0.97); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 1.5rem; right: 1.5rem;
+      background: #ffffff0a;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      width: 38px; height: 38px;
+      border-radius: 50%;
+      font-size: 0.9rem;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      transition: all 0.2s;
+    }
+
+    .modal-close:hover { background: #ffffff14; color: var(--text); }
+
+    .modal-header { margin-bottom: 2.5rem; }
+
+    .modal-header p {
+      font-size: 0.68rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 0.5rem;
+    }
+
+    .modal-header h2 {
+      font-size: 1.75rem;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+    }
+
+    /* MOODS */
+    .moods {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 1rem;
+    }
+
+    .mood {
+      border-radius: 20px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      cursor: default;
+      transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s, border-color 0.25s;
+      background: #0d0d14;
+    }
+
+    .mood:hover {
+      transform: translateY(-6px) scale(1.03);
+      box-shadow: 0 20px 48px #00000070;
+      border-color: #ffffff18;
+    }
+
+    .mood-preview {
+      height: 110px;
+      padding: 1.1rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+    }
+
+    .mood-swatches {
+      display: flex;
+      gap: 6px;
+      padding: 0.9rem 1rem;
+      border-top: 1px solid #ffffff08;
+      border-bottom: 1px solid #ffffff08;
+    }
+
+    .swatch {
+      flex: 1;
+      height: 20px;
+      border-radius: 8px;
+    }
+
+    .mood-info {
+      padding: 0.75rem 1rem;
+    }
+
+    .mood-num {
+      display: none;
+    }
+
+    .mood-num-overlay {
+      position: absolute;
+      top: 0.7rem;
+      left: 0.8rem;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      color: #e8e8f0;
+      line-height: 1;
+      pointer-events: none;
+      z-index: 2;
+      background: #00000070;
+      backdrop-filter: blur(6px);
+      padding: 0.25rem 0.55rem;
+      border-radius: 6px;
+    }
+
+    .mood-name {
+      font-size: 0.82rem;
+      font-weight: 700;
+      margin-bottom: 0.1rem;
+    }
+
+    .mood-style {
+      font-size: 0.68rem;
+      color: var(--muted);
+    }
+
+    .mb { height: 6px; border-radius: 10px; }
+    .mb.w80 { width: 80%; }
+    .mb.w50 { width: 50%; }
+    .mbtn { height: 18px; border-radius: 9px; width: 45%; }
+
+    footer {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      padding: 2rem;
+      border-top: 1px solid var(--border);
+      font-size: 0.78rem;
+      color: var(--muted);
+    }
+
+    @media (max-width: 900px) {
+      .grid { grid-template-columns: repeat(2, 1fr); }
+      .moods { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    @media (max-width: 580px) {
+      .grid { grid-template-columns: 1fr; gap: 0.75rem; padding: 0 1.25rem; }
+      .moods { grid-template-columns: repeat(2, 1fr); }
+      .modal { padding: 1.5rem; border-radius: 20px; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="badge">✦ Blacqout Design Showcase</div>
+  <h1>Wähl dein <span>Design.</span></h1>
+  <p>Klick auf deine Branche und such dir deinen Stil aus.</p>
+</header>
+
+<div class="grid" id="grid"></div>
+
+<div class="overlay" id="overlay">
+  <div class="modal" id="modal">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <div class="modal-header">
+      <p id="modal-label">Branche</p>
+      <h2 id="modal-title">Designs</h2>
+    </div>
+    <div class="moods" id="moods"></div>
+  </div>
+</div>
+
+<footer>© 2026 Blacqout · blacqout.de</footer>
+
+<script>
+const branches = [
+  { num: "01", icon: "🍽", name: "Restaurant", desc: "Gastronomie, Cafés & Bars" },
+  { num: "02", icon: "✂", name: "Friseur & Beauty", desc: "Salons, Kosmetik, Nails" },
+  { num: "03", icon: "💪", name: "Fitness & Sport", desc: "Studios, Trainer, Yoga" },
+  { num: "04", icon: "🔧", name: "Handwerk", desc: "Bau, Elektro, Sanitär" },
+  { num: "05", icon: "🏠", name: "Immobilien", desc: "Makler, Verwaltung, Bauträger" },
+  { num: "06", icon: "📸", name: "Fotografie", desc: "Hochzeit, Portrait, Business" },
+  { num: "07", icon: "⚖", name: "Kanzlei & Beratung", desc: "Anwälte, Coaches, Steuer" },
+  { num: "08", icon: "🛍", name: "Mode & Lifestyle", desc: "Boutiquen, Designer, Stores" },
+  { num: "09", icon: "🎉", name: "Events & Locations", desc: "Venues, DJ, Veranstaltungen" },
+];
+
+const moods = [
+  { name: "Dark Minimal", style: "Dunkel · Schlicht", bg: "#080808", c1: "#1e1e1e", c2: "#333", c3: "#fff" },
+  { name: "Cream & Warm", style: "Hell · Gemütlich", bg: "#faf6ef", c1: "#e8dcc8", c2: "#b89a70", c3: "#2a1f0e" },
+  { name: "Neon Purple", style: "Dunkel · Leuchtend", bg: "#09060f", c1: "#1e0a3c", c2: "#7c3aed", c3: "#c4b5fd" },
+  { name: "Ocean Blue", style: "Blau · Vertrauensvoll", bg: "#eff6ff", c1: "#bfdbfe", c2: "#3b82f6", c3: "#1e40af" },
+  { name: "Forest", style: "Grün · Natürlich", bg: "#f0fdf4", c1: "#bbf7d0", c2: "#22c55e", c3: "#14532d" },
+  { name: "Luxury Gold", style: "Schwarz · Edel", bg: "#07060a", c1: "#1a1500", c2: "#9a7a00", c3: "#f0c040" },
+  { name: "Warm Red", style: "Rot · Kraftvoll", bg: "#fff5f5", c1: "#fecaca", c2: "#ef4444", c3: "#7f1d1d" },
+  { name: "Slate", style: "Grau · Modern", bg: "#f8fafc", c1: "#e2e8f0", c2: "#64748b", c3: "#0f172a" },
+  { name: "Coral Soft", style: "Pfirsich · Freundlich", bg: "#fff7ed", c1: "#fed7aa", c2: "#f97316", c3: "#7c2d12" },
+  { name: "Mono Sharp", style: "Kontrast · Direkt", bg: "#ffffff", c1: "#d4d4d4", c2: "#525252", c3: "#000000" },
+];
+
+// Build cards with 3D tilt
+const grid = document.getElementById('grid');
+branches.forEach((b) => {
+  const card = document.createElement('div');
+  card.className = 'card';
+  card.innerHTML = `
+    <div class="card-num">${b.num}</div>
+    <span class="card-icon">${b.icon}</span>
+    <div class="card-name">${b.name}</div>
+    <div class="card-desc">${b.desc}</div>
+    <div class="card-cta">Designs ansehen <span>→</span></div>
+  `;
+
+  // 3D tilt on mousemove
+  card.addEventListener('mousemove', (e) => {
+    const rect = card.getBoundingClientRect();
+    const x = (e.clientX - rect.left) / rect.width;
+    const y = (e.clientY - rect.top) / rect.height;
+    const rotX = (y - 0.5) * -12;
+    const rotY = (x - 0.5) * 12;
+    card.style.transform = `perspective(800px) rotateX(${rotX}deg) rotateY(${rotY}deg) translateZ(8px)`;
+    card.style.setProperty('--mx', `${x * 100}%`);
+    card.style.setProperty('--my', `${y * 100}%`);
+  });
+
+  card.addEventListener('mouseleave', () => {
+    card.style.transform = 'perspective(800px) rotateX(0) rotateY(0) translateZ(0)';
+    card.style.transition = 'transform 0.5s cubic-bezier(0.16,1,0.3,1), box-shadow 0.3s, border-color 0.3s';
+  });
+
+  card.addEventListener('mouseenter', () => {
+    card.style.transition = 'transform 0.1s ease, box-shadow 0.3s, border-color 0.3s';
+  });
+
+  card.addEventListener('click', () => openModal(b));
+  grid.appendChild(card);
+});
+
+function openModal(branch) {
+  document.getElementById('modal-label').textContent = branch.icon + '  ' + branch.name;
+  document.getElementById('modal-title').textContent = '10 Designs für ' + branch.name;
+
+  const moodsEl = document.getElementById('moods');
+  moodsEl.innerHTML = '';
+
+  moods.forEach((m, i) => {
+    const el = document.createElement('div');
+    el.className = 'mood';
+    el.innerHTML = `
+      <div class="mood-preview" style="background:${m.bg}">
+        <span class="mood-num-overlay">${String(i+1).padStart(2,'0')}</span>
+        <div class="mb w80" style="background:${m.c1}"></div>
+        <div class="mb w50" style="background:${m.c2}"></div>
+        <div class="mbtn" style="background:${m.c3}"></div>
+      </div>
+      <div class="mood-swatches">
+        <div class="swatch" style="background:${m.bg};border:1px solid #ffffff10"></div>
+        <div class="swatch" style="background:${m.c1}"></div>
+        <div class="swatch" style="background:${m.c2}"></div>
+        <div class="swatch" style="background:${m.c3}"></div>
+      </div>
+      <div class="mood-info">
+        <div class="mood-num">Design ${String(i+1).padStart(2,'0')}</div>
+        <div class="mood-name">${m.name}</div>
+        <div class="mood-style">${m.style}</div>
+      </div>
+    `;
+    moodsEl.appendChild(el);
+  });
+
+  document.getElementById('overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal() {
+  document.getElementById('overlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+document.getElementById('overlay').addEventListener('click', function(e) {
+  if (e.target === this) closeModal();
+});
+</script>
+</body>
+</html>
