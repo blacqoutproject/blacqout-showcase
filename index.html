@@ -414,6 +414,13 @@ body {
 .pm-mockup-wrapper { width: 100%; overflow: hidden; }
 .pm-mockup { width: 860px; transform-origin: top left; }
 
+@media (max-width: 600px) {
+  #preview-modal { padding: 8px; }
+  .pm-box { border-radius: 12px; max-height: 96vh; }
+  .pm-header { padding: 12px 14px; }
+  .pm-browser-bar { padding: 8px 12px; }
+}
+
 /* Style card — cursor pointer für Modal-Öffnung */
 .style-card { cursor: pointer; }
 .sc-hint {
@@ -986,21 +993,23 @@ function openPreview(styleId, indId, styleName) {
   modal.classList.add('open');
   document.body.style.overflow = 'hidden';
 
-  requestAnimationFrame(() => {
+  setTimeout(() => {
     const wrapper = document.querySelector('.pm-mockup-wrapper');
     const mockup  = document.querySelector('.pm-mockup');
-    if (wrapper && mockup) {
-      const w = wrapper.offsetWidth;
-      if (w < 860) {
-        const scale = w / 860;
-        mockup.style.transform = `scale(${scale})`;
-        wrapper.style.height = (mockup.scrollHeight * scale) + 'px';
-      } else {
-        mockup.style.transform = '';
-        wrapper.style.height = 'auto';
-      }
+    if (!wrapper || !mockup) return;
+    const w = wrapper.offsetWidth;
+    if (w < 860) {
+      const naturalH = mockup.offsetHeight;
+      const scale = w / 860;
+      mockup.style.transform = `scale(${scale})`;
+      mockup.style.transformOrigin = 'top left';
+      wrapper.style.height = (naturalH * scale) + 'px';
+    } else {
+      mockup.style.transform = '';
+      mockup.style.transformOrigin = '';
+      wrapper.style.height = 'auto';
     }
-  });
+  }, 80);
 }
 
 function closePreview(e) {
