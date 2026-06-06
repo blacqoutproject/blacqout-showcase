@@ -411,7 +411,8 @@ body {
 .pm-body::-webkit-scrollbar-track { background: #0a0a0a; }
 .pm-body::-webkit-scrollbar-thumb { background: #2a2a2a; border-radius: 3px; }
 
-.pm-mockup { width: 860px; min-width: 860px; }
+.pm-mockup-wrapper { width: 100%; overflow: hidden; }
+.pm-mockup { width: 860px; transform-origin: top left; }
 
 /* Style card — cursor pointer für Modal-Öffnung */
 .style-card { cursor: pointer; }
@@ -980,10 +981,26 @@ function openPreview(styleId, indId, styleName) {
   const style = stylesMeta.find(s => s.id === styleId);
   document.getElementById('pm-title').textContent = ind.name + ' — ' + styleName;
   document.getElementById('pm-url').textContent = 'www.' + ind.name2.toLowerCase().replace(/\s+/g,'-').replace(/[^a-z0-9\-]/g,'') + '.de';
-  document.getElementById('pm-body').innerHTML = '<div class="pm-mockup">' + renderMockup(styleId, ind) + '</div>';
+  document.getElementById('pm-body').innerHTML = '<div class="pm-mockup-wrapper"><div class="pm-mockup">' + renderMockup(styleId, ind) + '</div></div>';
   const modal = document.getElementById('preview-modal');
   modal.classList.add('open');
   document.body.style.overflow = 'hidden';
+
+  requestAnimationFrame(() => {
+    const wrapper = document.querySelector('.pm-mockup-wrapper');
+    const mockup  = document.querySelector('.pm-mockup');
+    if (wrapper && mockup) {
+      const w = wrapper.offsetWidth;
+      if (w < 860) {
+        const scale = w / 860;
+        mockup.style.transform = `scale(${scale})`;
+        wrapper.style.height = (mockup.scrollHeight * scale) + 'px';
+      } else {
+        mockup.style.transform = '';
+        wrapper.style.height = 'auto';
+      }
+    }
+  });
 }
 
 function closePreview(e) {
