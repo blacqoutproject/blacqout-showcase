@@ -1,478 +1,1001 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Blacqout — Design Showcase</title>
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet">
+<meta name="googlebot" content="noindex, nofollow">
+<meta name="description" content="">
+<title>Vorschau</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
 
-    :root {
-      --bg: #060608;
-      --surface: #0f0f12;
-      --border: #1c1c24;
-      --text: #e8e8f0;
-      --muted: #52526a;
-    }
+body {
+  font-family: -apple-system, 'Segoe UI', sans-serif;
+  background: #0c0c0c;
+  color: #fff;
+  min-height: 100vh;
+}
 
-    html { scroll-behavior: smooth; }
+/* ===== LANDING ===== */
+#landing { padding: 64px 40px 80px; max-width: 1200px; margin: 0 auto; }
 
-    body {
-      background: var(--bg);
-      color: var(--text);
-      font-family: 'Inter', system-ui, sans-serif;
-      min-height: 100vh;
-      overflow-x: hidden;
-    }
+.page-header { text-align: center; margin-bottom: 56px; }
+.page-header h1 {
+  font-size: 2.6rem; font-weight: 700; letter-spacing: -1px;
+  background: linear-gradient(135deg, #fff 0%, #666 100%);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  margin-bottom: 12px;
+}
+.page-header p { color: #555; font-size: 1rem; }
 
-    /* ANIMATED BG */
-    body::before {
-      content: '';
-      position: fixed;
-      inset: 0;
-      background:
-        radial-gradient(ellipse 80% 50% at 20% 20%, #7c3aed18 0%, transparent 60%),
-        radial-gradient(ellipse 60% 40% at 80% 80%, #2563eb14 0%, transparent 60%);
-      pointer-events: none;
-      z-index: 0;
-    }
+.industry-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 12px;
+}
 
-    header {
-      position: relative;
-      z-index: 1;
-      text-align: center;
-      padding: 5rem 2rem 3.5rem;
-    }
+.industry-card {
+  background: #111;
+  border: 1px solid #1e1e1e;
+  border-radius: 12px;
+  padding: 22px 20px 20px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  user-select: none;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.industry-card::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 3px;
+  background: var(--ac);
+  border-radius: 12px 0 0 12px;
+  opacity: 0.7;
+  transition: opacity 0.2s;
+}
+.industry-card::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at 0% 50%, var(--ac) 0%, transparent 65%);
+  opacity: 0;
+  transition: opacity 0.25s;
+}
+.industry-card:hover {
+  border-color: #2e2e2e;
+  background: #161616;
+  transform: translateX(3px);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.35);
+}
+.industry-card:hover::before { opacity: 1; }
+.industry-card:hover::after { opacity: 0.06; }
+.industry-card:hover .ic-arrow { opacity: 1; transform: translateX(0); }
 
-    .badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      background: #ffffff08;
-      border: 1px solid #ffffff12;
-      border-radius: 100px;
-      padding: 0.35rem 1rem;
-      font-size: 0.72rem;
-      color: var(--muted);
-      letter-spacing: 0.08em;
-      margin-bottom: 1.75rem;
-      backdrop-filter: blur(8px);
-    }
+.ic-left { flex: 1; min-width: 0; }
+.ic-name { font-size: 0.95rem; font-weight: 700; color: #e0e0e0; letter-spacing: -0.2px; }
+.ic-sub { font-size: 0.75rem; color: #3a3a3a; margin-top: 3px; }
+.ic-arrow {
+  font-size: 0.85rem;
+  color: var(--ac);
+  opacity: 0;
+  transform: translateX(-4px);
+  transition: all 0.2s;
+  flex-shrink: 0;
+  font-weight: 300;
+}
 
-    header h1 {
-      font-size: clamp(2.2rem, 5vw, 4rem);
-      font-weight: 800;
-      letter-spacing: -0.04em;
-      line-height: 1.1;
-      margin-bottom: 1rem;
-    }
+/* ===== STYLE VIEW ===== */
+#style-view { display: none; padding: 40px; max-width: 1400px; margin: 0 auto; }
 
-    header h1 span {
-      background: linear-gradient(135deg, #a78bfa, #60a5fa, #34d399);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-    }
+.back-btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: none; border: 1px solid #2a2a2a; color: #888;
+  padding: 10px 18px; border-radius: 8px; cursor: pointer;
+  font-size: 0.875rem; margin-bottom: 36px; transition: all 0.15s;
+}
+.back-btn:hover { border-color: #555; color: #fff; }
 
-    header p {
-      color: var(--muted);
-      font-size: 1rem;
-    }
+.sv-header { margin-bottom: 40px; }
+.sv-header h2 { font-size: 1.8rem; font-weight: 700; }
+.sv-header p { color: #555; margin-top: 6px; font-size: 0.9rem; }
 
-    /* GRID */
-    .grid {
-      position: relative;
-      z-index: 1;
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 1.25rem;
-      max-width: 1100px;
-      margin: 0 auto 5rem;
-      padding: 0 2rem;
-      perspective: 1000px;
-    }
+.style-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+  gap: 22px;
+}
 
-    .card {
-      background: linear-gradient(145deg, #13131a, #0d0d14);
-      border: 1px solid var(--border);
-      border-radius: 24px;
-      padding: 2.25rem;
-      cursor: pointer;
-      transition: transform 0.15s ease, box-shadow 0.3s ease, border-color 0.3s;
-      transform-style: preserve-3d;
-      position: relative;
-      overflow: hidden;
-    }
+.style-card {
+  background: #161616;
+  border: 1px solid #222;
+  border-radius: 14px;
+  overflow: hidden;
+  cursor: default;
+  transition: all 0.2s ease;
+}
+.style-card:hover {
+  border-color: #444;
+  transform: translateY(-4px);
+  box-shadow: 0 24px 48px rgba(0,0,0,0.5);
+}
 
-    .card::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      border-radius: 24px;
-      background: radial-gradient(circle at var(--mx, 50%) var(--my, 50%), #ffffff08 0%, transparent 60%);
-      opacity: 0;
-      transition: opacity 0.3s;
-      pointer-events: none;
-    }
+/* mockup preview */
+.mockup-wrap {
+  width: 100%;
+  height: 320px;
+  overflow: hidden;
+  position: relative;
+  background: #111;
+  border-bottom: 1px solid #1e1e1e;
+}
+.mockup-inner {
+  width: 860px;
+  transform: scale(0.4186);
+  transform-origin: top left;
+  position: absolute;
+  top: 0; left: 0;
+  pointer-events: none;
+}
 
-    .card:hover::before { opacity: 1; }
+.sc-info { padding: 16px 18px 18px; }
+.sc-name { font-size: 0.95rem; font-weight: 700; color: #eee; }
+.sc-desc { font-size: 0.8rem; color: #555; margin-top: 4px; line-height: 1.5; }
+.sc-badge {
+  display: inline-block; margin-top: 10px;
+  padding: 3px 10px; border-radius: 20px;
+  font-size: 0.72rem; font-weight: 600; letter-spacing: 0.3px;
+}
 
-    .card:hover {
-      border-color: #ffffff18;
-      box-shadow: 0 20px 60px #00000080, 0 0 0 1px #ffffff08;
-    }
+/* ===== MOCKUP STYLES ===== */
 
-    .card-num {
-      font-size: 0.62rem;
-      letter-spacing: 0.15em;
-      color: var(--muted);
-      margin-bottom: 1.25rem;
-    }
+/* 1 — MODERN MINIMAL */
+.mk-modern {
+  background: #fff;
+  font-family: -apple-system, 'Helvetica Neue', Arial, sans-serif;
+  height: 540px;
+}
+.mk-modern .mn { background:#fff; border-bottom:1px solid #eee; padding:16px 36px; display:flex; justify-content:space-between; align-items:center; }
+.mk-modern .mn-logo { font-size:17px; font-weight:800; color:#111; letter-spacing:-0.5px; }
+.mk-modern .mn-links { display:flex; gap:24px; }
+.mk-modern .mn-links span { font-size:12px; color:#555; }
+.mk-modern .mn-cta { background:#111; color:#fff; padding:9px 20px; border-radius:6px; font-size:12px; font-weight:600; }
+.mk-modern .mh { padding:64px 36px 48px; text-align:center; background:#f9f9f9; }
+.mk-modern .mh h1 { font-size:42px; font-weight:800; color:#111; line-height:1.1; letter-spacing:-1.5px; }
+.mk-modern .mh p { font-size:14px; color:#777; margin-top:14px; line-height:1.65; max-width:460px; margin-left:auto; margin-right:auto; }
+.mk-modern .mh-btn { display:inline-block; background:#111; color:#fff; padding:13px 32px; border-radius:7px; font-size:13px; font-weight:700; margin-top:24px; }
+.mk-modern .mf { display:flex; gap:12px; padding:24px 36px; background:#fff; }
+.mk-modern .mfi { flex:1; padding:18px; border:1px solid #eee; border-radius:10px; }
+.mk-modern .mfi h3 { font-size:13px; font-weight:700; color:#111; }
+.mk-modern .mfi p { font-size:11px; color:#888; margin-top:6px; line-height:1.5; }
 
-    .card-icon {
-      font-size: 2.25rem;
-      margin-bottom: 1rem;
-      display: block;
-      filter: drop-shadow(0 4px 12px #0008);
-    }
+/* 2 — PREMIUM DARK */
+.mk-premium {
+  background:#070707;
+  font-family:'Georgia','Times New Roman',serif;
+}
 
-    .card-name {
-      font-size: 1.15rem;
-      font-weight: 700;
-      letter-spacing: -0.02em;
-      margin-bottom: 0.4rem;
-    }
+.mk-premium .mn { padding:20px 36px; display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid rgba(200,160,60,0.18); }
+.mk-premium .mn-logo { font-size:15px; font-weight:700; color:#C8A23C; letter-spacing:4px; text-transform:uppercase; }
+.mk-premium .mn-links { display:flex; gap:28px; }
+.mk-premium .mn-links span { font-size:10px; color:#666; letter-spacing:2px; text-transform:uppercase; }
+.mk-premium .mn-cta { border:1px solid #C8A23C; color:#C8A23C; padding:9px 20px; font-size:10px; letter-spacing:2px; text-transform:uppercase; }
+.mk-premium .mh { padding:72px 36px 52px; text-align:center; }
+.mk-premium .mh-line { width:36px; height:1px; background:#C8A23C; margin:0 auto 20px; }
+.mk-premium .mh h1 { font-size:38px; color:#fff; font-weight:400; letter-spacing:2px; line-height:1.25; }
+.mk-premium .mh p { font-size:12px; color:#666; margin-top:14px; letter-spacing:0.8px; line-height:1.9; }
+.mk-premium .mh-btn { display:inline-block; background:#C8A23C; color:#000; padding:13px 36px; font-size:11px; font-weight:700; letter-spacing:3px; text-transform:uppercase; margin-top:28px; }
+.mk-premium .mf { display:flex; border-top:1px solid #151515; margin-top:20px; }
+.mk-premium .mfi { flex:1; padding:24px; text-align:center; border-right:1px solid #111; }
+.mk-premium .mfi:last-child { border-right:none; }
+.mk-premium .mfi h3 { font-size:10px; color:#C8A23C; letter-spacing:3px; text-transform:uppercase; }
+.mk-premium .mfi p { font-size:11px; color:#444; margin-top:8px; line-height:1.6; }
 
-    .card-desc {
-      font-size: 0.8rem;
-      color: var(--muted);
-      line-height: 1.6;
-      margin-bottom: 1.5rem;
-    }
+/* 3 — WARM CLASSIC */
+.mk-warm {
+  background:#FDF6E3;
+  font-family:'Georgia','Times New Roman',serif;
+}
 
-    .card-cta {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.4rem;
-      font-size: 0.78rem;
-      color: #7c7ca0;
-      font-weight: 500;
-      transition: color 0.2s, gap 0.2s;
-    }
+.mk-warm .mn { background:#fff; border-bottom:2px solid #D4A96A; padding:18px 36px; display:flex; justify-content:space-between; align-items:center; }
+.mk-warm .mn-logo { font-size:19px; font-weight:700; color:#5C3317; font-style:italic; }
+.mk-warm .mn-links { display:flex; gap:24px; }
+.mk-warm .mn-links span { font-size:12px; color:#7B4F2E; }
+.mk-warm .mn-cta { background:#8B4513; color:#FDF6E3; padding:9px 20px; border-radius:4px; font-size:12px; }
+.mk-warm .mh { padding:60px 36px 44px; text-align:center; }
+.mk-warm .mh-orn { font-size:22px; color:#D4A96A; margin-bottom:12px; }
+.mk-warm .mh h1 { font-size:38px; font-weight:700; color:#3E1C00; line-height:1.2; }
+.mk-warm .mh p { font-size:13px; color:#7B4F2E; margin-top:14px; line-height:1.75; font-style:italic; }
+.mk-warm .mh-btn { display:inline-block; background:#8B4513; color:#FDF6E3; padding:13px 32px; border-radius:4px; font-size:13px; margin-top:22px; }
+.mk-warm .mf { display:flex; background:#fff; padding:22px 36px; border-top:1px solid #E8D5B5; margin-top:12px; }
+.mk-warm .mfi { flex:1; padding:12px 16px; text-align:center; border-right:1px solid #EEE0C8; }
+.mk-warm .mfi:last-child { border-right:none; }
+.mk-warm .mfi h3 { font-size:13px; font-weight:700; color:#5C3317; }
+.mk-warm .mfi p { font-size:11px; color:#9A7A55; margin-top:6px; line-height:1.5; }
 
-    .card:hover .card-cta {
-      color: var(--text);
-      gap: 0.7rem;
-    }
+/* 4 — BOLD COLORFUL */
+.mk-bold {
+  background:#fff;
+  font-family:'Arial Black','Impact',Arial,sans-serif;
+}
 
-    /* OVERLAY */
-    .overlay {
-      display: none;
-      position: fixed;
-      inset: 0;
-      background: #000000d0;
-      backdrop-filter: blur(20px);
-      z-index: 300;
-      overflow-y: auto;
-      padding: 2rem;
-      animation: fadeIn 0.2s ease;
-    }
+.mk-bold .mn { padding:14px 28px; display:flex; justify-content:space-between; align-items:center; }
+.mk-bold .mn-logo { font-size:19px; font-weight:900; color:#fff; }
+.mk-bold .mn-links { display:flex; gap:20px; }
+.mk-bold .mn-links span { font-size:12px; color:rgba(255,255,255,0.85); font-family:Arial,sans-serif; font-weight:600; }
+.mk-bold .mn-cta { background:#fff; padding:9px 20px; border-radius:50px; font-size:12px; font-weight:900; }
+.mk-bold .mh { padding:64px 36px 48px; text-align:center; }
+.mk-bold .mh h1 { font-size:48px; font-weight:900; color:#fff; line-height:1; text-transform:uppercase; letter-spacing:-1px; }
+.mk-bold .mh p { font-size:14px; margin-top:14px; color:rgba(255,255,255,0.82); font-family:Arial,sans-serif; font-weight:400; line-height:1.6; }
+.mk-bold .mh-btn { display:inline-block; background:#fff; padding:13px 36px; border-radius:50px; font-size:14px; font-weight:900; margin-top:24px; }
+.mk-bold .mf { display:flex; gap:10px; padding:20px 28px; background:#f4f4f4; }
+.mk-bold .mfi { flex:1; padding:16px; background:#fff; border-radius:10px; text-align:center; box-shadow:0 2px 6px rgba(0,0,0,0.07); }
+.mk-bold .mfi h3 { font-size:12px; font-weight:900; color:#111; text-transform:uppercase; }
+.mk-bold .mfi p { font-size:10px; color:#666; margin-top:5px; font-family:Arial,sans-serif; font-weight:400; line-height:1.4; }
 
-    .overlay.open { display: flex; align-items: flex-start; justify-content: center; }
+/* 5 — NATURE ORGANIC */
+.mk-nature {
+  background:#F4EFE4;
+  font-family:Georgia,serif;
+}
 
-    @keyframes fadeIn {
-      from { opacity: 0; }
-      to { opacity: 1; }
-    }
+.mk-nature .mn { background:#2A4220; padding:16px 36px; display:flex; justify-content:space-between; align-items:center; }
+.mk-nature .mn-logo { font-size:17px; font-weight:700; color:#9EC86F; }
+.mk-nature .mn-links { display:flex; gap:24px; }
+.mk-nature .mn-links span { font-size:12px; color:rgba(255,255,255,0.65); }
+.mk-nature .mn-cta { background:#9EC86F; color:#1A3010; padding:9px 20px; border-radius:50px; font-size:12px; font-weight:700; }
+.mk-nature .mh { padding:60px 36px 44px; text-align:center; background:linear-gradient(180deg,#E0EDCC 0%,#F4EFE4 100%); }
+.mk-nature .mh-leaf { font-size:28px; margin-bottom:10px; }
+.mk-nature .mh h1 { font-size:38px; font-weight:700; color:#2A4220; line-height:1.2; }
+.mk-nature .mh p { font-size:13px; color:#527A3A; margin-top:14px; line-height:1.75; }
+.mk-nature .mh-btn { display:inline-block; background:#2A4220; color:#9EC86F; padding:13px 32px; border-radius:50px; font-size:13px; font-weight:700; margin-top:22px; }
+.mk-nature .mf { display:flex; gap:10px; padding:20px 28px; background:#fff; margin-top:10px; }
+.mk-nature .mfi { flex:1; padding:16px; border-left:3px solid #9EC86F; }
+.mk-nature .mfi h3 { font-size:13px; font-weight:700; color:#2A4220; }
+.mk-nature .mfi p { font-size:11px; color:#6A8A52; margin-top:6px; line-height:1.5; }
 
-    .modal {
-      background: linear-gradient(145deg, #0f0f18, #0a0a12);
-      border: 1px solid var(--border);
-      border-radius: 28px;
-      width: 100%;
-      max-width: 1100px;
-      padding: 3rem;
-      position: relative;
-      margin: auto;
-      animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-    }
+/* 6 — TECH FUTURISTIC */
+.mk-tech {
+  background:#060C18;
+  font-family:Arial,sans-serif;
+}
 
-    @keyframes slideUp {
-      from { opacity: 0; transform: translateY(40px) scale(0.97); }
-      to { opacity: 1; transform: translateY(0) scale(1); }
-    }
+.mk-tech .mn { background:rgba(0,220,255,0.03); border-bottom:1px solid rgba(0,220,255,0.12); padding:16px 36px; display:flex; justify-content:space-between; align-items:center; }
+.mk-tech .mn-logo { font-size:16px; font-weight:700; color:#00DCFF; letter-spacing:3px; font-family:'Courier New',monospace; }
+.mk-tech .mn-links { display:flex; gap:24px; }
+.mk-tech .mn-links span { font-size:11px; color:rgba(0,220,255,0.55); letter-spacing:2px; }
+.mk-tech .mn-cta { border:1px solid rgba(0,220,255,0.4); color:#00DCFF; padding:9px 20px; font-size:10px; letter-spacing:2px; }
+.mk-tech .mh { padding:64px 36px 48px; text-align:center; }
+.mk-tech .mh-tag { display:inline-block; border:1px solid rgba(0,220,255,0.2); color:#00DCFF; font-size:9px; letter-spacing:4px; padding:5px 14px; margin-bottom:20px; font-family:'Courier New',monospace; }
+.mk-tech .mh h1 { font-size:42px; font-weight:800; color:#fff; line-height:1.1; letter-spacing:-1px; }
+.mk-tech .mh h1 em { color:#00DCFF; font-style:normal; }
+.mk-tech .mh p { font-size:13px; color:rgba(255,255,255,0.42); margin-top:14px; line-height:1.75; }
+.mk-tech .mh-btn { display:inline-block; background:#00DCFF; color:#000; padding:13px 32px; font-size:11px; font-weight:800; letter-spacing:3px; margin-top:26px; }
+.mk-tech .mf { display:flex; gap:10px; padding:18px 28px; border-top:1px solid rgba(0,220,255,0.08); margin-top:14px; }
+.mk-tech .mfi { flex:1; padding:14px; border:1px solid rgba(0,220,255,0.09); background:rgba(0,220,255,0.02); }
+.mk-tech .mfi h3 { font-size:11px; color:#00DCFF; letter-spacing:2px; font-family:'Courier New',monospace; }
+.mk-tech .mfi p { font-size:11px; color:rgba(255,255,255,0.35); margin-top:6px; line-height:1.5; }
 
-    .modal-close {
-      position: absolute;
-      top: 1.5rem; right: 1.5rem;
-      background: #ffffff0a;
-      border: 1px solid var(--border);
-      color: var(--muted);
-      width: 38px; height: 38px;
-      border-radius: 50%;
-      font-size: 0.9rem;
-      cursor: pointer;
-      display: flex; align-items: center; justify-content: center;
-      transition: all 0.2s;
-    }
+/* ===== EXTRA SECTIONS ===== */
 
-    .modal-close:hover { background: #ffffff14; color: var(--text); }
+/* --- Modern extra --- */
+.mk-modern .mabout { display:flex; align-items:center; gap:28px; padding:28px 36px; background:#f5f5f5; border-top:1px solid #eee; }
+.mk-modern .mabout-img { width:200px; height:120px; border-radius:10px; flex-shrink:0; }
+.mk-modern .mabout h3 { font-size:20px; font-weight:800; color:#111; margin-bottom:8px; }
+.mk-modern .mabout p { font-size:12px; color:#777; line-height:1.65; }
+.mk-modern .mgal { display:flex; gap:10px; padding:24px 36px; background:#fff; border-top:1px solid #eee; }
+.mk-modern .mgal-img { flex:1; height:130px; border-radius:8px; }
+.mk-modern .mgal-label { font-size:10px; color:#aaa; margin-top:6px; text-align:center; }
+.mk-modern .mstats { display:flex; background:#111; padding:24px 36px; }
+.mk-modern .mstat { flex:1; text-align:center; }
+.mk-modern .mstat-n { font-size:28px; font-weight:900; color:#fff; }
+.mk-modern .mstat-l { font-size:10px; color:#555; margin-top:5px; letter-spacing:1px; text-transform:uppercase; }
 
-    .modal-header { margin-bottom: 2.5rem; }
+/* --- Premium extra --- */
+.mk-premium .mstats { display:flex; border-top:1px solid #111; border-bottom:1px solid #0d0d0d; padding:24px 36px; }
+.mk-premium .mstat { flex:1; text-align:center; }
+.mk-premium .mstat-n { font-size:32px; font-weight:700; color:#C8A23C; font-family:Georgia,serif; }
+.mk-premium .mstat-l { font-size:9px; color:#444; margin-top:7px; letter-spacing:3px; text-transform:uppercase; }
+.mk-premium .mgal { display:flex; gap:4px; padding:20px 36px 28px; background:#050505; }
+.mk-premium .mgal-img { flex:1; height:120px; border:1px solid rgba(200,160,60,0.12); }
 
-    .modal-header p {
-      font-size: 0.68rem;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      color: var(--muted);
-      margin-bottom: 0.5rem;
-    }
+/* --- Warm extra --- */
+.mk-warm .mquote { padding:28px 48px; background:#fff; border-top:1px solid #EEE0C8; text-align:center; }
+.mk-warm .mquote-mark { font-size:48px; color:#DEB887; line-height:1; margin-bottom:4px; font-family:Georgia,serif; }
+.mk-warm .mquote q { font-size:14px; color:#7B4F2E; font-style:italic; line-height:1.75; font-family:Georgia,serif; }
+.mk-warm .mquote cite { display:block; font-size:11px; color:#B89A70; margin-top:10px; letter-spacing:1px; }
+.mk-warm .mgal { display:flex; gap:8px; padding:20px 36px; background:#FDF6E3; border-top:1px solid #E8D5B5; }
+.mk-warm .mgal-img { flex:1; height:120px; border-radius:4px; }
 
-    .modal-header h2 {
-      font-size: 1.75rem;
-      font-weight: 800;
-      letter-spacing: -0.03em;
-    }
+/* --- Bold extra --- */
+.mk-bold .mgal { display:flex; gap:8px; padding:16px 28px; background:#efefef; }
+.mk-bold .mgal-img { flex:1; height:120px; border-radius:8px; }
+.mk-bold .mbanner { padding:24px 36px; text-align:center; }
+.mk-bold .mbanner h3 { font-size:24px; font-weight:900; color:#fff; text-transform:uppercase; letter-spacing:-0.5px; }
+.mk-bold .mbanner p { font-size:13px; color:rgba(255,255,255,0.75); margin-top:6px; font-family:Arial,sans-serif; }
+.mk-bold .mbanner-btn { display:inline-block; background:#fff; padding:11px 30px; border-radius:50px; font-size:13px; font-weight:900; margin-top:14px; }
 
-    /* MOODS */
-    .moods {
-      display: grid;
-      grid-template-columns: repeat(5, 1fr);
-      gap: 1rem;
-    }
+/* --- Nature extra --- */
+.mk-nature .mabout { display:flex; border-top:3px solid #E0EDCC; }
+.mk-nature .mabout-img { flex:1; min-height:120px; }
+.mk-nature .mabout-text { flex:1; padding:22px 24px; background:#fff; }
+.mk-nature .mabout-text h3 { font-size:17px; font-weight:700; color:#2A4220; margin-bottom:8px; font-family:Georgia,serif; }
+.mk-nature .mabout-text p { font-size:12px; color:#527A3A; line-height:1.65; }
+.mk-nature .mgal { display:flex; gap:6px; padding:16px 28px; background:#F4EFE4; }
+.mk-nature .mgal-img { flex:1; height:110px; border-radius:4px; }
 
-    .mood {
-      border-radius: 20px;
-      overflow: hidden;
-      border: 1px solid var(--border);
-      cursor: default;
-      transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s, border-color 0.25s;
-      background: #0d0d14;
-    }
+/* --- Tech extra --- */
+.mk-tech .mstats { display:flex; gap:10px; padding:16px 28px; border-top:1px solid rgba(0,220,255,0.08); }
+.mk-tech .mstat { flex:1; padding:16px; border:1px solid rgba(0,220,255,0.12); background:rgba(0,220,255,0.02); text-align:center; }
+.mk-tech .mstat-n { font-size:26px; font-weight:800; color:#00DCFF; }
+.mk-tech .mstat-l { font-size:9px; color:rgba(255,255,255,0.3); margin-top:6px; letter-spacing:2px; font-family:'Courier New',monospace; }
+.mk-tech .mcode { margin:0 28px 20px; padding:16px 20px; background:rgba(0,220,255,0.03); border:1px solid rgba(0,220,255,0.1); border-radius:4px; }
+.mk-tech .mcode-line { font-size:11px; font-family:'Courier New',monospace; color:rgba(0,220,255,0.5); line-height:1.8; }
+.mk-tech .mcode-line em { color:#00DCFF; font-style:normal; }
+.mk-tech .mcode-line s { color:rgba(255,255,255,0.2); text-decoration:none; }
 
-    .mood:hover {
-      transform: translateY(-6px) scale(1.03);
-      box-shadow: 0 20px 48px #00000070;
-      border-color: #ffffff18;
-    }
 
-    .mood-preview {
-      height: 110px;
-      padding: 1.1rem;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      position: relative;
-    }
+/* ===== PREVIEW MODAL ===== */
+#preview-modal {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.88);
+  z-index: 1000;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  backdrop-filter: blur(6px);
+}
+#preview-modal.open { display: flex; }
 
-    .mood-swatches {
-      display: flex;
-      gap: 6px;
-      padding: 0.9rem 1rem;
-      border-top: 1px solid #ffffff08;
-      border-bottom: 1px solid #ffffff08;
-    }
+.pm-box {
+  background: #111;
+  border: 1px solid #2a2a2a;
+  border-radius: 16px;
+  width: 100%;
+  max-width: 920px;
+  max-height: 90vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 40px 100px rgba(0,0,0,0.7);
+  animation: pmIn 0.22s cubic-bezier(0.34,1.56,0.64,1);
+}
+@keyframes pmIn {
+  from { transform: scale(0.94) translateY(12px); opacity: 0; }
+  to   { transform: scale(1) translateY(0); opacity: 1; }
+}
 
-    .swatch {
-      flex: 1;
-      height: 20px;
-      border-radius: 8px;
-    }
+.pm-header {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 16px 20px; border-bottom: 1px solid #1c1c1c; flex-shrink: 0;
+}
+.pm-title { font-size: 0.95rem; font-weight: 700; color: #eee; }
+.pm-sub { font-size: 0.75rem; color: #444; margin-top: 2px; }
+.pm-close {
+  background: none; border: 1px solid #2a2a2a; color: #666;
+  width: 32px; height: 32px; border-radius: 50%; cursor: pointer;
+  font-size: 13px; line-height: 1; transition: all 0.15s; flex-shrink: 0;
+}
+.pm-close:hover { border-color: #555; color: #fff; background: #1a1a1a; }
 
-    .mood-info {
-      padding: 0.75rem 1rem;
-    }
+.pm-browser-bar {
+  display: flex; align-items: center; gap: 12px;
+  padding: 10px 16px; background: #0e0e0e;
+  border-bottom: 1px solid #1a1a1a; flex-shrink: 0;
+}
+.pm-dots { display: flex; gap: 6px; }
+.pm-dots span {
+  width: 10px; height: 10px; border-radius: 50%;
+  background: #333; display: block;
+}
+.pm-dots span:nth-child(1) { background: #555; }
+.pm-dots span:nth-child(2) { background: #444; }
+.pm-dots span:nth-child(3) { background: #3a3a3a; }
+.pm-url {
+  flex: 1; background: #1a1a1a; border: 1px solid #222;
+  border-radius: 6px; padding: 5px 12px;
+  font-size: 11px; color: #555; font-family: monospace;
+}
 
-    .mood-num {
-      display: none;
-    }
+.pm-body {
+  overflow-y: auto; overflow-x: hidden; flex: 1;
+}
+.pm-body::-webkit-scrollbar { width: 6px; }
+.pm-body::-webkit-scrollbar-track { background: #0a0a0a; }
+.pm-body::-webkit-scrollbar-thumb { background: #2a2a2a; border-radius: 3px; }
 
-    .mood-num-overlay {
-      position: absolute;
-      top: 0.7rem;
-      left: 0.8rem;
-      font-size: 0.72rem;
-      font-weight: 700;
-      letter-spacing: 0.08em;
-      color: #e8e8f0;
-      line-height: 1;
-      pointer-events: none;
-      z-index: 2;
-      background: #00000070;
-      backdrop-filter: blur(6px);
-      padding: 0.25rem 0.55rem;
-      border-radius: 6px;
-    }
+.pm-mockup { width: 860px; min-width: 860px; }
 
-    .mood-name {
-      font-size: 0.82rem;
-      font-weight: 700;
-      margin-bottom: 0.1rem;
-    }
+/* Style card — cursor pointer für Modal-Öffnung */
+.style-card { cursor: pointer; }
+.sc-hint {
+  font-size: 0.72rem; color: #333; margin-top: 6px;
+  letter-spacing: 0.3px;
+}
 
-    .mood-style {
-      font-size: 0.68rem;
-      color: var(--muted);
-    }
+/* ===== ANIMATIONEN ===== */
 
-    .mb { height: 6px; border-radius: 10px; }
-    .mb.w80 { width: 80%; }
-    .mb.w50 { width: 50%; }
-    .mbtn { height: 18px; border-radius: 9px; width: 45%; }
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(18px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
 
-    footer {
-      position: relative;
-      z-index: 1;
-      text-align: center;
-      padding: 2rem;
-      border-top: 1px solid var(--border);
-      font-size: 0.78rem;
-      color: var(--muted);
-    }
+.page-header {
+  animation: slideDown 0.5s cubic-bezier(0.16,1,0.3,1) both;
+}
+.sv-header {
+  animation: slideDown 0.4s cubic-bezier(0.16,1,0.3,1) both;
+}
 
-    @media (max-width: 900px) {
-      .grid { grid-template-columns: repeat(2, 1fr); }
-      .moods { grid-template-columns: repeat(2, 1fr); }
-    }
+.industry-card {
+  opacity: 0;
+  animation: fadeUp 0.45s cubic-bezier(0.16,1,0.3,1) both;
+}
+.style-card {
+  opacity: 0;
+  animation: fadeUp 0.45s cubic-bezier(0.16,1,0.3,1) both;
+}
+.back-btn {
+  animation: fadeIn 0.35s ease both;
+}
 
-    @media (max-width: 580px) {
-      .grid { grid-template-columns: 1fr; gap: 0.75rem; padding: 0 1.25rem; }
-      .moods { grid-template-columns: repeat(2, 1fr); }
-      .modal { padding: 1.5rem; border-radius: 20px; }
-    }
-  </style>
+/* Glow-Pulse auf Hover für Industry-Karten */
+.industry-card:hover::after {
+  animation: none;
+}
+
+/* Seiten-Übergang */
+#landing, #style-view {
+  transition: opacity 0.25s ease;
+}
+#landing.fading, #style-view.fading {
+  opacity: 0;
+  pointer-events: none;
+}
+</style>
 </head>
 <body>
 
-<header>
-  <div class="badge">✦ Blacqout Design Showcase</div>
-  <h1>Wähl dein <span>Design.</span></h1>
-  <p>Klick auf deine Branche und such dir deinen Stil aus.</p>
-</header>
+<!-- LANDING PAGE -->
+<div id="landing">
+  <div class="page-header">
+    <h1>Website Stil-Auswahl</h1>
+    <p>Wähle deine Branche und entdecke verschiedene Design-Stile</p>
+  </div>
+  <div class="industry-grid" id="industryGrid"></div>
+</div>
 
-<div class="grid" id="grid"></div>
+<!-- STYLE VIEW -->
+<div id="style-view">
+  <button class="back-btn" onclick="showLanding()">
+    ← Zurück zur Auswahl
+  </button>
+  <div class="sv-header">
+    <h2 id="sv-title"></h2>
+    <p>Klicke auf einen Stil, der dir gefällt — oder zeig diese Seite deinem Webdesigner</p>
+  </div>
+  <div class="style-grid" id="styleGrid"></div>
+</div>
 
-<div class="overlay" id="overlay">
-  <div class="modal" id="modal">
-    <button class="modal-close" onclick="closeModal()">✕</button>
-    <div class="modal-header">
-      <p id="modal-label">Branche</p>
-      <h2 id="modal-title">Designs</h2>
+<!-- PREVIEW MODAL -->
+<div id="preview-modal" onclick="closePreview(event)">
+  <div class="pm-box">
+    <div class="pm-header">
+      <div>
+        <div class="pm-title" id="pm-title"></div>
+        <div class="pm-sub">Scrolle um die gesamte Seite zu sehen</div>
+      </div>
+      <button class="pm-close" onclick="closePreview()">✕</button>
     </div>
-    <div class="moods" id="moods"></div>
+    <div class="pm-browser-bar">
+      <div class="pm-dots"><span></span><span></span><span></span></div>
+      <div class="pm-url" id="pm-url"></div>
+    </div>
+    <div class="pm-body" id="pm-body"></div>
   </div>
 </div>
 
-<footer>© 2026 Blacqout · blacqout.de</footer>
-
 <script>
-const branches = [
-  { num: "01", icon: "🍽", name: "Restaurant", desc: "Gastronomie, Cafés & Bars" },
-  { num: "02", icon: "✂", name: "Friseur & Beauty", desc: "Salons, Kosmetik, Nails" },
-  { num: "03", icon: "💪", name: "Fitness & Sport", desc: "Studios, Trainer, Yoga" },
-  { num: "04", icon: "🔧", name: "Handwerk", desc: "Bau, Elektro, Sanitär" },
-  { num: "05", icon: "🏠", name: "Immobilien", desc: "Makler, Verwaltung, Bauträger" },
-  { num: "06", icon: "📸", name: "Fotografie", desc: "Hochzeit, Portrait, Business" },
-  { num: "07", icon: "⚖", name: "Kanzlei & Beratung", desc: "Anwälte, Coaches, Steuer" },
-  { num: "08", icon: "🛍", name: "Mode & Lifestyle", desc: "Boutiquen, Designer, Stores" },
-  { num: "09", icon: "🎉", name: "Events & Locations", desc: "Venues, DJ, Veranstaltungen" },
+(function() {
+  // Rechtsklick sperren
+  document.addEventListener('contextmenu', e => e.preventDefault());
+
+  // F12, Strg+U, Strg+Shift+I/J/C sperren
+  document.addEventListener('keydown', e => {
+    if (
+      e.key === 'F12' ||
+      (e.ctrlKey && e.key === 'u') ||
+      (e.ctrlKey && e.shiftKey && ['i','j','c','I','J','C'].includes(e.key))
+    ) e.preventDefault();
+  });
+})();
+
+const industries = [
+  {
+    id:'restaurant', name:'Restaurant', icon:'🍽️', color:'#e63946',
+    name2:'Bella Vista Ristorante',
+    navItems:['Speisekarte','Reservierung','Über uns','Kontakt'],
+    hero:'Genuss auf höchstem Niveau',
+    sub:'Frische Zutaten, leidenschaftlich zubereitet — jeden Abend ein unvergessliches Erlebnis.',
+    cta:'Tisch reservieren',
+    f:[
+      {e:'🍝',t:'Pasta & Risotto',d:'Hausgemachte Pasta nach Originalrezept'},
+      {e:'🍷',t:'Weinkeller',d:'Über 80 erlesene Weine aus Italien'},
+      {e:'⭐',t:'Seit 1985',d:'Familienbetrieb in dritter Generation'}
+    ]
+  },
+  {
+    id:'cafe', name:'Café & Bistro', icon:'☕', color:'#c07a18',
+    name2:'Café Morgenrot',
+    navItems:['Karte','Frühstück','Events','Kontakt'],
+    hero:'Dein Lieblingsplatz in der Stadt',
+    sub:'Hausgemachter Kuchen, Bio-Kaffee und eine Atmosphäre zum Wohlfühlen.',
+    cta:'Tisch sichern',
+    f:[
+      {e:'☕',t:'Specialty Coffee',d:'Single Origin, täglich frisch geröstet'},
+      {e:'🍰',t:'Selbstgemacht',d:'Kuchen & Torten nach Omas Rezept'},
+      {e:'📚',t:'Zum Verweilen',d:'Gratis WLAN & gemütliche Sitzecken'}
+    ]
+  },
+  {
+    id:'kiosk', name:'Kiosk & Späti', icon:'🏪', color:'#2563eb',
+    name2:'Spätikauf Berlin',
+    navItems:['Sortiment','Öffnungszeiten','Standort','Kontakt'],
+    hero:'Immer für dich da — Tag & Nacht',
+    sub:'Dein verlässlicher Kiosk im Kiez. Getränke, Snacks und mehr — rund um die Uhr.',
+    cta:'Standort finden',
+    f:[
+      {e:'🍺',t:'Getränke',d:'Große Auswahl an Kalt- und Heißgetränken'},
+      {e:'🕐',t:'24/7 geöffnet',d:'Auch an Sonn- und Feiertagen'},
+      {e:'📍',t:'Im Kiez',d:'Direkt in deiner Nachbarschaft'}
+    ]
+  },
+  {
+    id:'industrie', name:'Industrie', icon:'🏭', color:'#94a3b8',
+    name2:'MetallTech GmbH',
+    navItems:['Leistungen','Produkte','Referenzen','Kontakt'],
+    hero:'Präzision, die überzeugt',
+    sub:'Industrielle Fertigung auf höchstem Niveau — ISO-zertifiziert und termingenau seit 1972.',
+    cta:'Anfrage stellen',
+    f:[
+      {e:'⚙️',t:'CNC-Fertigung',d:'Präzision bis 0,01 mm Toleranz'},
+      {e:'🏆',t:'ISO 9001',d:'Zertifizierte Qualitätssicherung'},
+      {e:'🚚',t:'Pünktlich',d:'Termingerechte Lieferung garantiert'}
+    ]
+  },
+  {
+    id:'it', name:'IT & Software', icon:'💻', color:'#7c3aed',
+    name2:'DevStack Solutions',
+    navItems:['Leistungen','Projekte','Team','Kontakt'],
+    hero:'Software, die dein Business voranbringt',
+    sub:'Von der Web-App bis zur KI-Integration — maßgeschneiderte digitale Lösungen für dein Unternehmen.',
+    cta:'Projekt starten',
+    f:[
+      {e:'🚀',t:'Web & Apps',d:'Moderne Webanwendungen & mobile Apps'},
+      {e:'🤖',t:'KI-Integration',d:'Machine Learning & Automatisierung'},
+      {e:'🛡️',t:'IT-Security',d:'Penetrationstests & Sicherheitsberatung'}
+    ]
+  },
+  {
+    id:'handwerk', name:'Handwerk', icon:'🔧', color:'#ea580c',
+    name2:'Meisterbetrieb Schulz',
+    navItems:['Leistungen','Referenzen','Über uns','Kontakt'],
+    hero:'Handwerk, dem du vertrauen kannst',
+    sub:'Über 30 Jahre Erfahrung, Meisterbetrieb, faire Preise — Ihre Zufriedenheit ist unser Auftrag.',
+    cta:'Kostenlos anfragen',
+    f:[
+      {e:'🔨',t:'Renovierungen',d:'Komplette Umbau- und Sanierungsarbeiten'},
+      {e:'📋',t:'Meisterbetrieb',d:'Zertifizierte Fachqualität mit Garantie'},
+      {e:'⚡',t:'Schnell & fair',d:'Verbindliche Angebote, pünktliche Arbeit'}
+    ]
+  },
+  {
+    id:'beauty', name:'Friseur & Beauty', icon:'✂️', color:'#db2777',
+    name2:'Studio Élégance',
+    navItems:['Leistungen','Preise','Team','Termin'],
+    hero:'Dein Ort für Schönheit & Wohlgefühl',
+    sub:'Erstklassige Haarpflege, Beauty-Treatments und Entspannung im Herzen der Stadt.',
+    cta:'Termin buchen',
+    f:[
+      {e:'💇',t:'Hairstyling',d:'Schnitt, Farbe, Highlights & Dauerwelle'},
+      {e:'💅',t:'Beauty',d:'Nails, Waxing, Kosmetikbehandlungen'},
+      {e:'🌟',t:'Premium',d:'Nur Top-Produkte von Redken & L\'Oréal'}
+    ]
+  },
+  {
+    id:'fitness', name:'Fitness & Sport', icon:'💪', color:'#16a34a',
+    name2:'PowerZone Gym',
+    navItems:['Kurse','Mitgliedschaft','Trainer','Kontakt'],
+    hero:'Werde die beste Version von dir',
+    sub:'Modernste Geräte, zertifizierte Trainer und über 50 Kurse pro Woche — für alle Levels.',
+    cta:'Probetraining buchen',
+    f:[
+      {e:'🏋️',t:'500+ Geräte',d:'State-of-the-art Fitnessausstattung'},
+      {e:'👨‍🏫',t:'Personal Training',d:'Zertifizierte Trainer für deine Ziele'},
+      {e:'🥗',t:'Ernährung',d:'Individuelle Ernährungsberatung'}
+    ]
+  },
+  {
+    id:'gesundheit', name:'Arzt & Gesundheit', icon:'🏥', color:'#0891b2',
+    name2:'Praxis Dr. Müller',
+    navItems:['Leistungen','Team','Termin','Notfall'],
+    hero:'Ihre Gesundheit in besten Händen',
+    sub:'Moderne Diagnostik, persönliche Betreuung und kurze Wartezeiten — wir sind für Sie da.',
+    cta:'Termin vereinbaren',
+    f:[
+      {e:'🩺',t:'Allgemeinmedizin',d:'Vorsorge, Diagnose & Behandlung'},
+      {e:'🔬',t:'Labor',d:'Eigenes Labor für schnelle Ergebnisse'},
+      {e:'📱',t:'Online-Termin',d:'Buchung rund um die Uhr möglich'}
+    ]
+  },
+  {
+    id:'einzelhandel', name:'Einzelhandel', icon:'🛍️', color:'#dc2626',
+    name2:'Mode & Mehr Boutique',
+    navItems:['Sortiment','Angebote','Über uns','Kontakt'],
+    hero:'Mode, die zu dir passt',
+    sub:'Kuratierte Kollektionen, persönliche Beratung und Stücke, die du anderswo nicht findest.',
+    cta:'Kollektion entdecken',
+    f:[
+      {e:'👗',t:'Neuankömmlinge',d:'Wöchentlich neue Stücke für jede Saison'},
+      {e:'✨',t:'Persönlich',d:'Individuelle Styling-Beratung im Laden'},
+      {e:'🔄',t:'Umtausch',d:'30 Tage Rückgabe ohne Fragen'}
+    ]
+  },
+  {
+    id:'immobilien', name:'Immobilien', icon:'🏠', color:'#1d4ed8',
+    name2:'Immobilien König',
+    navItems:['Kaufen','Mieten','Bewertung','Kontakt'],
+    hero:'Ihr Traumhaus — wir finden es',
+    sub:'Über 500 aktuelle Objekte, 20 Jahre Erfahrung und persönliche Betreuung vom ersten Tag an.',
+    cta:'Kostenlos beraten',
+    f:[
+      {e:'🏡',t:'Häuser & Wohnungen',d:'Kauf und Miete in Ihrer Wunschregion'},
+      {e:'📊',t:'Gratis-Bewertung',d:'Professionelle Immobilienbewertung'},
+      {e:'🤝',t:'Rundum-Service',d:'Von Besichtigung bis Übergabe'}
+    ]
+  },
+  {
+    id:'bildung', name:'Bildung & Kurse', icon:'🎓', color:'#6d28d9',
+    name2:'LearnHub Akademie',
+    navItems:['Kurse','Dozenten','Preise','Kontakt'],
+    hero:'Lerne die Skills von morgen',
+    sub:'Online- & Präsenzkurse, zertifizierte Abschlüsse und eine Community von 10.000+ Lernenden.',
+    cta:'Kurs starten',
+    f:[
+      {e:'📚',t:'200+ Kurse',d:'Von IT bis Kreativität — für jedes Level'},
+      {e:'🏆',t:'Zertifikate',d:'Anerkannte Abschlüsse für deinen Lebenslauf'},
+      {e:'🌐',t:'Online & vor Ort',d:'Flexibel lernen wo und wann du willst'}
+    ]
+  }
 ];
 
-const moods = [
-  { name: "Dark Minimal", style: "Dunkel · Schlicht", bg: "#080808", c1: "#1e1e1e", c2: "#333", c3: "#fff" },
-  { name: "Cream & Warm", style: "Hell · Gemütlich", bg: "#faf6ef", c1: "#e8dcc8", c2: "#b89a70", c3: "#2a1f0e" },
-  { name: "Neon Purple", style: "Dunkel · Leuchtend", bg: "#09060f", c1: "#1e0a3c", c2: "#7c3aed", c3: "#c4b5fd" },
-  { name: "Ocean Blue", style: "Blau · Vertrauensvoll", bg: "#eff6ff", c1: "#bfdbfe", c2: "#3b82f6", c3: "#1e40af" },
-  { name: "Forest", style: "Grün · Natürlich", bg: "#f0fdf4", c1: "#bbf7d0", c2: "#22c55e", c3: "#14532d" },
-  { name: "Luxury Gold", style: "Schwarz · Edel", bg: "#07060a", c1: "#1a1500", c2: "#9a7a00", c3: "#f0c040" },
-  { name: "Warm Red", style: "Rot · Kraftvoll", bg: "#fff5f5", c1: "#fecaca", c2: "#ef4444", c3: "#7f1d1d" },
-  { name: "Slate", style: "Grau · Modern", bg: "#f8fafc", c1: "#e2e8f0", c2: "#64748b", c3: "#0f172a" },
-  { name: "Coral Soft", style: "Pfirsich · Freundlich", bg: "#fff7ed", c1: "#fed7aa", c2: "#f97316", c3: "#7c2d12" },
-  { name: "Mono Sharp", style: "Kontrast · Direkt", bg: "#ffffff", c1: "#d4d4d4", c2: "#525252", c3: "#000000" },
+const stylesMeta = [
+  { id:'modern',  name:'Modern & Minimal',    desc:'Sauber, zeitlos, professionell — Fokus auf Inhalt',          badge:'Beliebt',  bc:'#2563eb' },
+  { id:'premium', name:'Premium & Exklusiv',   desc:'Dunkel, luxuriös, Gold-Akzente — für Premium-Anspruch',       badge:'Luxus',    bc:'#b8860b' },
+  { id:'warm',    name:'Warm & Klassisch',     desc:'Warme Töne, Serifen, einladend — vertrauenswürdig & zeitlos', badge:'Zeitlos',  bc:'#8b4513' },
+  { id:'bold',    name:'Bold & Dynamisch',     desc:'Starke Farben, mutige Typografie — auffällig & modern',       badge:'Trendig',  bc:'#dc2626' },
+  { id:'nature',  name:'Natur & Organisch',    desc:'Grüntöne, Bio-Ästhetik — nachhaltig & frisch',                badge:'Grün',     bc:'#16a34a' },
+  { id:'tech',    name:'Tech & Futuristisch',  desc:'Dunkel, Neon-Akzente, Digital-Ästhetik — innovativ',          badge:'Digital',  bc:'#0891b2' }
 ];
 
-// Build cards with 3D tilt
-const grid = document.getElementById('grid');
-branches.forEach((b) => {
-  const card = document.createElement('div');
-  card.className = 'card';
-  card.innerHTML = `
-    <div class="card-num">${b.num}</div>
-    <span class="card-icon">${b.icon}</span>
-    <div class="card-name">${b.name}</div>
-    <div class="card-desc">${b.desc}</div>
-    <div class="card-cta">Designs ansehen <span>→</span></div>
-  `;
+const galleryColors = {
+  restaurant:   ['#8B1A1A','#C4622D','#6B3A2A'],
+  cafe:         ['#7A5230','#C49A6C','#3E2A14'],
+  kiosk:        ['#1A3A6B','#F0C040','#2E5490'],
+  industrie:    ['#4A5568','#A0B0C0','#2D3748'],
+  it:           ['#4B0082','#7B2FBE','#00BFFF'],
+  handwerk:     ['#8B4513','#D2691E','#A0522D'],
+  beauty:       ['#C06080','#F4A7B9','#8B2252'],
+  fitness:      ['#1A6B3A','#3CB371','#0D4A28'],
+  gesundheit:   ['#0077A8','#56B6D8','#00495E'],
+  einzelhandel: ['#C0392B','#E8A0A0','#7B1818'],
+  immobilien:   ['#2C3E6B','#8899BB','#1A2540'],
+  bildung:      ['#2E0A7A','#7048C8','#F0B030']
+};
 
-  // 3D tilt on mousemove
-  card.addEventListener('mousemove', (e) => {
-    const rect = card.getBoundingClientRect();
-    const x = (e.clientX - rect.left) / rect.width;
-    const y = (e.clientY - rect.top) / rect.height;
-    const rotX = (y - 0.5) * -12;
-    const rotY = (x - 0.5) * 12;
-    card.style.transform = `perspective(800px) rotateX(${rotX}deg) rotateY(${rotY}deg) translateZ(8px)`;
-    card.style.setProperty('--mx', `${x * 100}%`);
-    card.style.setProperty('--my', `${y * 100}%`);
-  });
+const industryStats = {
+  restaurant:   [{n:'1.200+',l:'Gäste / Woche'},{n:'4.8',l:'Ø Bewertung'},{n:'38',l:'Jahre Erfahrung'}],
+  cafe:         [{n:'500',l:'Tassen / Tag'},{n:'4.9',l:'Ø Bewertung'},{n:'12',l:'Kuchensorten'}],
+  kiosk:        [{n:'24/7',l:'Geöffnet'},{n:'800+',l:'Produkte'},{n:'5',l:'Standorte'}],
+  industrie:    [{n:'52',l:'Jahre Erfahrung'},{n:'ISO',l:'9001 Zertifikat'},{n:'500+',l:'Projekte'}],
+  it:           [{n:'200+',l:'Projekte'},{n:'98 %',l:'Zufriedenheit'},{n:'15',l:'Jahre Erfahrung'}],
+  handwerk:     [{n:'30+',l:'Jahre Erfahrung'},{n:'500+',l:'Projekte'},{n:'100 %',l:'Meisterqualität'}],
+  beauty:       [{n:'5.000+',l:'Kunden'},{n:'15',l:'Spezialisten'},{n:'4.9',l:'Ø Bewertung'}],
+  fitness:      [{n:'500+',l:'Geräte'},{n:'50',l:'Kurse / Woche'},{n:'2.000+',l:'Mitglieder'}],
+  gesundheit:   [{n:'20+',l:'Jahre Erfahrung'},{n:'15 Min',l:'Wartezeit'},{n:'4.8',l:'Ø Bewertung'}],
+  einzelhandel: [{n:'1.000+',l:'Produkte'},{n:'30',l:'Tage Rückgabe'},{n:'4.7',l:'Ø Bewertung'}],
+  immobilien:   [{n:'500+',l:'Objekte'},{n:'20',l:'Jahre Erfahrung'},{n:'98 %',l:'Kundenzufriedenheit'}],
+  bildung:      [{n:'200+',l:'Kurse'},{n:'10.000+',l:'Absolventen'},{n:'4.9',l:'Ø Bewertung'}]
+};
 
-  card.addEventListener('mouseleave', () => {
-    card.style.transform = 'perspective(800px) rotateX(0) rotateY(0) translateZ(0)';
-    card.style.transition = 'transform 0.5s cubic-bezier(0.16,1,0.3,1), box-shadow 0.3s, border-color 0.3s';
-  });
+// Unified accent color per industry (used across ALL styles)
+const industryAccent = {
+  restaurant:   '#C0392B',
+  cafe:         '#B5651D',
+  kiosk:        '#1D4ED8',
+  industrie:    '#475569',
+  it:           '#7C3AED',
+  handwerk:     '#C2410C',
+  beauty:       '#C026A0',
+  fitness:      '#15803D',
+  gesundheit:   '#0284C7',
+  einzelhandel: '#DC2626',
+  immobilien:   '#1E40AF',
+  bildung:      '#5B21B6'
+};
 
-  card.addEventListener('mouseenter', () => {
-    card.style.transition = 'transform 0.1s ease, box-shadow 0.3s, border-color 0.3s';
-  });
+function navHtml(cls, ind) {
+  return `<div class="${cls} mn">
+    <div class="mn-logo">${ind.name2}</div>
+    <div class="mn-links">${ind.navItems.map(n=>`<span>${n}</span>`).join('')}</div>
+    <div class="mn-cta">${ind.cta}</div>
+  </div>`;
+}
 
-  card.addEventListener('click', () => openModal(b));
-  grid.appendChild(card);
-});
+function featHtml(cls, ind) {
+  return `<div class="${cls} mf">${ind.f.map(x=>`<div class="${cls} mfi"><h3>${x.t}</h3><p>${x.d}</p></div>`).join('')}</div>`;
+}
 
-function openModal(branch) {
-  document.getElementById('modal-label').textContent = branch.icon + '  ' + branch.name;
-  document.getElementById('modal-title').textContent = '10 Designs für ' + branch.name;
+function renderMockup(styleId, ind) {
+  const gc  = galleryColors[ind.id]  || ['#333','#444','#555'];
+  const sts = industryStats[ind.id]  || [{n:'100+',l:'Projekte'},{n:'4.8',l:'Bewertung'},{n:'10',l:'Jahre'}];
+  const ac  = industryAccent[ind.id] || '#333333';
 
-  const moodsEl = document.getElementById('moods');
-  moodsEl.innerHTML = '';
+  const galImgs = (h, br='0') => [
+    `<div class="mgal-img" style="background:linear-gradient(140deg,${gc[0]},${gc[1]});height:${h}px;border-radius:${br}px;flex:1;"></div>`,
+    `<div class="mgal-img" style="background:linear-gradient(200deg,${gc[1]},${gc[2]});height:${h}px;border-radius:${br}px;flex:1;"></div>`,
+    `<div class="mgal-img" style="background:linear-gradient(60deg,${gc[2]},${gc[0]});height:${h}px;border-radius:${br}px;flex:1;"></div>`
+  ].join('');
 
-  moods.forEach((m, i) => {
-    const el = document.createElement('div');
-    el.className = 'mood';
-    el.innerHTML = `
-      <div class="mood-preview" style="background:${m.bg}">
-        <span class="mood-num-overlay">${String(i+1).padStart(2,'0')}</span>
-        <div class="mb w80" style="background:${m.c1}"></div>
-        <div class="mb w50" style="background:${m.c2}"></div>
-        <div class="mbtn" style="background:${m.c3}"></div>
+  /* ---- MODERN — Industry accent färbt Buttons, Features, Stats ---- */
+  if (styleId === 'modern') return `
+    <div class="mk-modern">
+      <div class="mk-modern mn">
+        <div class="mn-logo">${ind.name2}</div>
+        <div class="mn-links">${ind.navItems.map(n=>`<span>${n}</span>`).join('')}</div>
+        <div class="mn-cta" style="background:${ac};">${ind.cta}</div>
       </div>
-      <div class="mood-swatches">
-        <div class="swatch" style="background:${m.bg};border:1px solid #ffffff10"></div>
-        <div class="swatch" style="background:${m.c1}"></div>
-        <div class="swatch" style="background:${m.c2}"></div>
-        <div class="swatch" style="background:${m.c3}"></div>
+      <div class="mk-modern mh" style="background:linear-gradient(135deg,#f9f9f9 0%,${ac}0d 100%);">
+        <h1>${ind.hero}</h1>
+        <p>${ind.sub}</p>
+        <div class="mk-modern mh-btn" style="background:${ac};">${ind.cta}</div>
       </div>
-      <div class="mood-info">
-        <div class="mood-num">Design ${String(i+1).padStart(2,'0')}</div>
-        <div class="mood-name">${m.name}</div>
-        <div class="mood-style">${m.style}</div>
+      <div class="mk-modern mf">
+        ${ind.f.map(x=>`<div class="mk-modern mfi" style="border-top:3px solid ${ac};"><h3 style="color:${ac};">${x.t}</h3><p>${x.d}</p></div>`).join('')}
       </div>
-    `;
-    moodsEl.appendChild(el);
-  });
+      <div class="mk-modern mabout">
+        <div class="mabout-img" style="background:linear-gradient(140deg,${gc[0]},${gc[1]});"></div>
+        <div>
+          <h3 style="color:${ac};">Über uns</h3>
+          <p>Seit Jahren stehen wir für Qualität und persönliche Betreuung. Lernen Sie uns und unsere Arbeit kennen — wir freuen uns auf Sie.</p>
+        </div>
+      </div>
+      <div class="mk-modern mgal">${galImgs(130, 8)}</div>
+      <div class="mk-modern mstats" style="background:${ac};">
+        ${sts.map(s=>`<div class="mk-modern mstat"><div class="mstat-n">${s.n}</div><div class="mstat-l">${s.l}</div></div>`).join('')}
+      </div>
+    </div>`;
 
-  document.getElementById('overlay').classList.add('open');
+  /* ---- PREMIUM — Gold bleibt, Hero bekommt Industry-Glow ---- */
+  if (styleId === 'premium') return `
+    <div class="mk-premium">
+      <div class="mk-premium mn">
+        <div class="mn-logo">${ind.name2.toUpperCase()}</div>
+        <div class="mn-links">${ind.navItems.map(n=>`<span>${n}</span>`).join('')}</div>
+        <div class="mn-cta">${ind.cta}</div>
+      </div>
+      <div class="mk-premium mh" style="background:radial-gradient(ellipse at 50% -10%,${ac}28 0%,#070707 55%);">
+        <div class="mk-premium mh-line"></div>
+        <h1>${ind.hero}</h1>
+        <p>${ind.sub}</p>
+        <div class="mk-premium mh-btn">${ind.cta}</div>
+      </div>
+      <div class="mk-premium mstats">
+        ${sts.map(s=>`<div class="mk-premium mstat"><div class="mstat-n">${s.n}</div><div class="mstat-l">${s.l}</div></div>`).join('')}
+      </div>
+      <div class="mk-premium mf">
+        ${ind.f.map(x=>`<div class="mk-premium mfi"><h3>${x.t}</h3><p>${x.d}</p></div>`).join('')}
+      </div>
+      <div class="mk-premium mgal">${galImgs(120)}</div>
+    </div>`;
+
+  /* ---- WARM — Industry accent für Buttons & Feature-Titel ---- */
+  if (styleId === 'warm') return `
+    <div class="mk-warm">
+      <div class="mk-warm mn">
+        <div class="mn-logo">${ind.name2}</div>
+        <div class="mn-links">${ind.navItems.map(n=>`<span>${n}</span>`).join('')}</div>
+        <div class="mn-cta" style="background:${ac};">${ind.cta}</div>
+      </div>
+      <div class="mk-warm mh">
+        <div class="mk-warm mh-orn" style="color:${ac};">✦</div>
+        <h1>${ind.hero}</h1>
+        <p>${ind.sub}</p>
+        <div class="mk-warm mh-btn" style="background:${ac};">${ind.cta}</div>
+      </div>
+      <div class="mk-warm mf">
+        ${ind.f.map(x=>`<div class="mk-warm mfi"><h3 style="color:${ac};">${x.t}</h3><p>${x.d}</p></div>`).join('')}
+      </div>
+      <div class="mk-warm mquote">
+        <div class="mquote-mark" style="color:${ac};">"</div>
+        <q>Wir kommen seit Jahren hierher und würden es jedem weiterempfehlen. Qualität und Herzlichkeit auf höchstem Niveau.</q>
+        <cite>— Maria K., treue Kundin seit 2015</cite>
+      </div>
+      <div class="mk-warm mgal">${galImgs(120, 4)}</div>
+    </div>`;
+
+  /* ---- BOLD — Industry accent durchgehend ---- */
+  if (styleId === 'bold') return `
+    <div class="mk-bold">
+      <div class="mk-bold mn" style="background:${ac};">
+        <div class="mn-logo">${ind.name2}</div>
+        <div class="mn-links">${ind.navItems.map(n=>`<span>${n}</span>`).join('')}</div>
+        <div class="mn-cta" style="color:${ac};">${ind.cta}</div>
+      </div>
+      <div class="mk-bold mh" style="background:linear-gradient(135deg,${ac} 0%,${ac}bb 100%);">
+        <h1>${ind.hero}</h1>
+        <p>${ind.sub}</p>
+        <div class="mk-bold mh-btn" style="color:${ac};">${ind.cta}</div>
+      </div>
+      <div class="mk-bold mf">
+        ${ind.f.map(x=>`<div class="mk-bold mfi"><h3 style="color:${ac};">${x.t}</h3><p>${x.d}</p></div>`).join('')}
+      </div>
+      <div class="mk-bold mgal">${galImgs(120, 8)}</div>
+      <div class="mk-bold mbanner" style="background:linear-gradient(135deg,${ac},${ac}cc);">
+        <h3>Jetzt starten</h3>
+        <p>Keine langen Wartezeiten — direkt online buchen</p>
+        <div class="mbanner-btn" style="color:${ac};">${ind.cta}</div>
+      </div>
+    </div>`;
+
+  /* ---- NATURE — Grüne Struktur bleibt, Industry accent für CTA & Borders ---- */
+  if (styleId === 'nature') return `
+    <div class="mk-nature">
+      <div class="mk-nature mn">
+        <div class="mn-logo">${ind.name2}</div>
+        <div class="mn-links">${ind.navItems.map(n=>`<span>${n}</span>`).join('')}</div>
+        <div class="mn-cta" style="background:${ac};color:#fff;">${ind.cta}</div>
+      </div>
+      <div class="mk-nature mh">
+        <h1>${ind.hero}</h1>
+        <p>${ind.sub}</p>
+        <div class="mk-nature mh-btn" style="background:${ac};color:#fff;">${ind.cta}</div>
+      </div>
+      <div class="mk-nature mf">
+        ${ind.f.map(x=>`<div class="mk-nature mfi" style="border-left:3px solid ${ac};"><h3 style="color:#2A4220;">${x.t}</h3><p>${x.d}</p></div>`).join('')}
+      </div>
+      <div class="mk-nature mabout">
+        <div class="mabout-img" style="background:linear-gradient(140deg,${gc[0]},${gc[1]});min-height:140px;"></div>
+        <div class="mabout-text">
+          <h3 style="color:${ac};">Unsere Geschichte</h3>
+          <p>Wir glauben an natürliche Qualität und Nachhaltigkeit. Jedes Produkt — mit Verantwortung für Mensch und Natur.</p>
+        </div>
+      </div>
+      <div class="mk-nature mgal">${galImgs(110, 4)}</div>
+    </div>`;
+
+  /* ---- TECH — Rahmen & Struktur in Industry accent statt Cyan ---- */
+  if (styleId === 'tech') {
+    const w = ind.hero.split(' ');
+    const em = w.slice(0,2).join(' ');
+    const rest = w.slice(2).join(' ');
+    return `
+    <div class="mk-tech" style="background:#060C18;">
+      <div class="mk-tech mn" style="border-bottom:1px solid ${ac}22;background:${ac}05;">
+        <div class="mn-logo" style="color:${ac};letter-spacing:3px;font-family:'Courier New',monospace;">${ind.name2.toUpperCase()}</div>
+        <div class="mn-links">${ind.navItems.map(n=>`<span style="color:${ac}66;">${n}</span>`).join('')}</div>
+        <div class="mn-cta" style="border:1px solid ${ac}55;color:${ac};">${ind.cta}</div>
+      </div>
+      <div class="mk-tech mh">
+        <div class="mk-tech mh-tag" style="border:1px solid ${ac}33;color:${ac};">// NEXT GEN</div>
+        <h1><em style="color:${ac};">${em}</em> ${rest}</h1>
+        <p>${ind.sub}</p>
+        <div class="mk-tech mh-btn" style="background:${ac};color:#fff;letter-spacing:2px;">${ind.cta}</div>
+      </div>
+      <div class="mk-tech mstats">
+        ${sts.map(s=>`<div class="mk-tech mstat" style="border:1px solid ${ac}18;background:${ac}06;"><div class="mstat-n" style="color:${ac};">${s.n}</div><div class="mstat-l">${s.l}</div></div>`).join('')}
+      </div>
+      <div class="mk-tech mf">
+        ${ind.f.map(x=>`<div class="mk-tech mfi" style="border:1px solid ${ac}18;background:${ac}05;"><h3 style="color:${ac};">${x.t}</h3><p>${x.d}</p></div>`).join('')}
+      </div>
+      <div class="mk-tech mcode">
+        <div class="mcode-line"><em style="color:${ac};">const</em> result = <em style="color:${ac};">await</em> <s>api</s>.<em style="color:${ac};">launch</em>({ project: <s>"${ind.name2}"</s> });</div>
+        <div class="mcode-line"><em style="color:${ac};">console</em>.<s>log</s>(<s>"✓ Online — ${ind.cta}"</s>);</div>
+      </div>
+    </div>`;
+  }
+  return '';
+}
+
+function renderLanding() {
+  document.getElementById('industryGrid').innerHTML = industries.map((ind, i) => `
+    <div class="industry-card" onclick="showStyles('${ind.id}')" style="--ac:${ind.color};animation-delay:${i * 40}ms;">
+      <div class="ic-left">
+        <div class="ic-name">${ind.name}</div>
+        <div class="ic-sub">6 Stile verfügbar</div>
+      </div>
+      <div class="ic-arrow">→</div>
+    </div>`).join('');
+}
+
+function showStyles(id) {
+  const landing = document.getElementById('landing');
+  landing.classList.add('fading');
+  setTimeout(() => {
+    landing.style.display = 'none';
+    landing.classList.remove('fading');
+    const ind = industries.find(i => i.id === id);
+    const sv = document.getElementById('style-view');
+    sv.style.display = 'block';
+    sv.style.opacity = '0';
+    document.getElementById('sv-title').textContent = ind.name + ' — Stile';
+    document.getElementById('styleGrid').innerHTML = stylesMeta.map((s, i) => `
+      <div class="style-card" onclick="openPreview('${s.id}','${ind.id}','${s.name}')" style="animation-delay:${i * 60}ms;">
+        <div class="mockup-wrap">
+          <div class="mockup-inner">${renderMockup(s.id, ind)}</div>
+        </div>
+        <div class="sc-info">
+          <div class="sc-name">${s.name}</div>
+          <div class="sc-desc">${s.desc}</div>
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-top:10px;">
+            <span class="sc-badge" style="background:${s.bc}22;color:${s.bc};border:1px solid ${s.bc}44;">${s.badge}</span>
+            <span class="sc-hint">Klicken zum Vergrößern →</span>
+          </div>
+        </div>
+      </div>`).join('');
+    requestAnimationFrame(() => { sv.style.opacity = '1'; });
+  }, 200);
+}
+
+function showLanding() {
+  const sv = document.getElementById('style-view');
+  sv.classList.add('fading');
+  setTimeout(() => {
+    sv.style.display = 'none';
+    sv.classList.remove('fading');
+    const landing = document.getElementById('landing');
+    landing.style.display = 'block';
+    landing.style.opacity = '0';
+    requestAnimationFrame(() => { landing.style.opacity = '1'; });
+  }, 200);
+}
+
+function openPreview(styleId, indId, styleName) {
+  const ind = industries.find(i => i.id === indId);
+  const style = stylesMeta.find(s => s.id === styleId);
+  document.getElementById('pm-title').textContent = ind.name + ' — ' + styleName;
+  document.getElementById('pm-url').textContent = 'www.' + ind.name2.toLowerCase().replace(/\s+/g,'-').replace(/[^a-z0-9\-]/g,'') + '.de';
+  document.getElementById('pm-body').innerHTML = '<div class="pm-mockup">' + renderMockup(styleId, ind) + '</div>';
+  const modal = document.getElementById('preview-modal');
+  modal.classList.add('open');
   document.body.style.overflow = 'hidden';
 }
 
-function closeModal() {
-  document.getElementById('overlay').classList.remove('open');
-  document.body.style.overflow = '';
+function closePreview(e) {
+  if (!e || e.target === document.getElementById('preview-modal')) {
+    document.getElementById('preview-modal').classList.remove('open');
+    document.body.style.overflow = '';
+  }
 }
 
-document.getElementById('overlay').addEventListener('click', function(e) {
-  if (e.target === this) closeModal();
-});
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closePreview(); });
+
+renderLanding();
 </script>
 </body>
 </html>
